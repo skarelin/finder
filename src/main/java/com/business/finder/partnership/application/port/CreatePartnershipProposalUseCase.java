@@ -54,7 +54,6 @@ public interface CreatePartnershipProposalUseCase {
         List<Error> errors;
     }
 
-    @AllArgsConstructor
     @Getter
     enum Error {
         TEAM_DESCRIPTION_SHOULD_BE_PRESENT,
