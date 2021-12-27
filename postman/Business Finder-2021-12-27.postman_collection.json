@@ -17,7 +17,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"email\": \"karelin@gmail.com\",\n    \"password\": \"123123\"\n}"
+					"raw": "{\n\t\"email\": \"karelin@gmail.com\",\n    \"password\": \"123123\",\n    \"userType\": \"PERSONAL\"\n}"
 				},
 				"url": {
 					"raw": "{{host}}/register",
@@ -87,6 +87,73 @@
 			"name": "Add partnership proposal",
 			"request": {
 				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"subject\": \"Software House. I am senior developer\",\n\t\"industry\": \"IT\",\n\t\"country\": \"USA\",\n\t\"knowledgeOfProposalCreator\": \"I am a senior developer. I know java, spring and reactive programming. Also, I am a good leader\",\n\t\"isTeamAvailable\": true,\n\t\"teamDescription\": \"I work with my one friend. He is senior front-end developer\",\n\t\"additionalDescription\": \"Feel free to join us! We have daily, we are paying money and % from our company!\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/partnership-proposal",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"partnership-proposal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete current user",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"karelin@gmail.com\",\n\t\"password\": \"123123\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/user?email=karelin",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"user"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "karelin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Security configuration test",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
 				"header": [
 					{
 						"key": "Content-Type",
