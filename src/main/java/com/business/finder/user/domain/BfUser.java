@@ -37,6 +37,10 @@ public class BfUser extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private BfUserStatus bfUserStatus; // TODO. Should be activated after paying.
 
+    private String pictureUrl;
+
+    private String description;
+
     @CollectionTable(
             name = "bf_user_roles",
             joinColumns = @JoinColumn(name = "user_id")
@@ -50,6 +54,8 @@ public class BfUser extends BaseEntity {
         this.password = password;
         this.bfUserType = bfUserType;
         this.bfUserStatus = BfUserStatus.NEW;
+        this.pictureUrl = null;
+        this.description = null;
         this.roles = Set.of("ROLE_USER");
     }
 }

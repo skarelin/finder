@@ -58,6 +58,32 @@
 			"response": []
 		},
 		{
+			"name": "Change user description",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"profileDescription\": \"Hello, I am Sergey Karelin - Senior Java Developer. Feel free to contact with me!\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Logout user",
 			"request": {
 				"method": "POST",
@@ -162,7 +188,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"subject\": \"Software House. I am senior developer\",\n\t\"industry\": \"IT\",\n\t\"country\": \"USA\",\n\t\"knowledgeOfProposalCreator\": \"I am a senior developer. I know java, spring and reactive programming. Also, I am a good leader\",\n\t\"isTeamAvailable\": true,\n\t\"teamDescription\": \"I work with my one friend. He is senior front-end developer\",\n\t\"additionalDescription\": \"Feel free to join us! We have daily, we are paying money and % from our company!\"\n}"
+					"raw": ""
 				},
 				"url": {
 					"raw": "{{host}}/partnership-proposal",
