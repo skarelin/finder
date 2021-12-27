@@ -28,10 +28,14 @@ public class BfUser extends BaseEntity {
     private LocalDateTime updatedAt;
 
     private String email;
+
     private String password;
 
-//    @Enumerated(EnumType.STRING)
-//    private BfUserType bfUserType; // TODO. Should be activated after paying.
+    @Enumerated(EnumType.STRING)
+    private BfUserType bfUserType;
+
+    @Enumerated(EnumType.STRING)
+    private BfUserStatus bfUserStatus; // TODO. Should be activated after paying.
 
     @CollectionTable(
             name = "bf_user_roles",
@@ -41,9 +45,11 @@ public class BfUser extends BaseEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles;
 
-    public BfUser(String email, String password) {
+    public BfUser(String email, String password, BfUserType bfUserType) {
         this.email = email;
         this.password = password;
+        this.bfUserType = bfUserType;
+        this.bfUserStatus = BfUserStatus.NEW;
         this.roles = Set.of("ROLE_USER");
     }
 }

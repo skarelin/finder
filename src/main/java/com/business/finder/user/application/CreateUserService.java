@@ -21,7 +21,9 @@ class CreateUserService implements CreateUserUseCase {
         if (bfUserRepository.findByEmailIgnoreCase(command.getEmail()).isPresent()) {
             return CreateUserResponse.error(USER_ALREADY_EXISTS);
         }
-        BfUser bfUser = new BfUser(command.getEmail(), passwordEncoder.encode(command.getPassword()));
+        BfUser bfUser = new BfUser(command.getEmail(),
+                passwordEncoder.encode(command.getPassword()),
+                command.getUserType());
         bfUserRepository.save(bfUser);
         return CreateUserResponse.OK;
     }

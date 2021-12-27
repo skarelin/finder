@@ -7,7 +7,7 @@ import com.business.finder.user.application.port.DeleteUserUseCase;
 import com.business.finder.user.db.BfUserRepository;
 import com.business.finder.user.domain.BfUser;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,7 +22,8 @@ class DeleteUserService implements DeleteUserUseCase {
 
     @Override
     @Transactional
-    public DeleteUserResponse deleteUser(String userEmail, User user) {
+    public DeleteUserResponse deleteUser(String userEmail, UserDetails user) {
+        // TODO. We need to logout user.
         Optional<BfUser> userForDelete = bfUserRepository.findByEmailIgnoreCase(user.getUsername());
 
         if (userForDelete.isPresent()) {

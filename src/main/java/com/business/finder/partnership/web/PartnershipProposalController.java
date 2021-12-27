@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -44,7 +45,7 @@ public class PartnershipProposalController {
     // Just example how to use the @AuthentificationPrincipal annotation.
     // We can put User object into command object. Later in service we will use our UserSecurity wrapper for checking if it's admin or owner.
     @GetMapping
-    public Object shouldBeAuthorized(@AuthenticationPrincipal User object) {
+    public Object shouldBeAuthorized(@AuthenticationPrincipal UserDetails object) {
         return object.getUsername();
     }
 

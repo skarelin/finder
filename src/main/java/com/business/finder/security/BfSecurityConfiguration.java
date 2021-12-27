@@ -26,7 +26,7 @@ import java.util.List;
 class BfSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final String[] AUTH_GET_WHITELIST = {
-            "/version/",
+            "/version/**",
             "/v2/api-docs/**",
             "/swagger-resources/**",
             "/configuration/ui",

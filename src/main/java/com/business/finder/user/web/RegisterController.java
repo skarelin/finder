@@ -3,6 +3,7 @@ package com.business.finder.user.web;
 import com.business.finder.user.application.port.CreateUserUseCase;
 import com.business.finder.user.application.port.CreateUserUseCase.CreateUserCommand;
 import com.business.finder.user.application.port.CreateUserUseCase.CreateUserResponse;
+import com.business.finder.user.domain.BfUserType;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,8 +46,10 @@ public class RegisterController {
         @NotNull
         String password;
 
+        @NotNull BfUserType userType;
+
         CreateUserCommand toCreateUserCommand() {
-            return new CreateUserCommand(this.email, this.password);
+            return new CreateUserCommand(this.email, this.password, this.userType);
         }
     }
 }

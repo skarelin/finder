@@ -1,14 +1,14 @@
 package com.business.finder.user.application.port;
 
 import lombok.Value;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collections;
 import java.util.List;
 
 public interface DeleteUserUseCase {
 
-    DeleteUserResponse deleteUser(String userEmail, User command);
+    DeleteUserResponse deleteUser(String userEmail, UserDetails command);
 
     @Value
     class DeleteUserResponse {
