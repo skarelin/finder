@@ -1,0 +1,113 @@
+{
+	"info": {
+		"_postman_id": "4e271a30-fe61-4837-8b01-d17ead263c48",
+		"name": "Business Finder",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"karelin@gmail.com\",\n    \"password\": \"123123\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/register",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"karelin@gmail.com\",\n\t\"password\": \"123123\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"karelin@gmail.com\",\n\t\"password\": \"123123\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/logout",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add partnership proposal",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"subject\": \"Software House. I am senior developer\",\n\t\"industry\": \"IT\",\n\t\"country\": \"USA\",\n\t\"knowledgeOfProposalCreator\": \"I am a senior developer. I know java, spring and reactive programming. Also, I am a good leader\",\n\t\"isTeamAvailable\": true,\n\t\"teamDescription\": \"I work with my one friend. He is senior front-end developer\",\n\t\"additionalDescription\": \"Feel free to join us! We have daily, we are paying money and % from our company!\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/partnership-proposal",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"partnership-proposal"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
