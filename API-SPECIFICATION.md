@@ -18,6 +18,8 @@ POST: /partnership-proposal
 
 GET: /partnership-proposal/{partnership-proposal-uuid} -> show proposal by UUID;
 
+GET: /partnership-proposal/all
+
 PUT: /partnership-proposal/{partnership-proposal-uuid} -> update given partnership-proposal-uuid
 
 DELETE: /partnership-proposal/{partnership-proposal-uuid} -> delete proposal by UUID;
