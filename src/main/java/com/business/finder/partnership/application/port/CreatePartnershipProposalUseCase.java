@@ -25,6 +25,9 @@ public interface CreatePartnershipProposalUseCase {
         String knowledgeOfProposalCreator;
         boolean teamAvailable;
         String teamDescription;
+        int maxValue;
+        int period;
+        int valuePeriod;
         String additionalDescription;
 
         public PartnershipProposal toPartnershipProposal() {
