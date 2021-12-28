@@ -2,13 +2,17 @@ package com.business.finder.partnership.web;
 
 import com.business.finder.metadata.Country;
 import com.business.finder.metadata.Industry;
+import com.business.finder.partnership.application.PartnershipProposalResponse;
+import com.business.finder.partnership.application.port.PageableFetchingPartnershipProposalUseCase;
 import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase;
 import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.CreatePartnershipProposalCommand;
-import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.PartnershipProposalResponse;
+import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.Response;
 import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.UpdatePartnershipProposalCommand;
 import com.business.finder.security.UserEntityDetails;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -19,6 +23,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/partnership-proposal")
@@ -27,11 +32,12 @@ import javax.validation.constraints.Size;
 public class PartnershipProposalController {
 
     private final QueryPartnershipProposalUseCase queryPartnershipProposalUseCase;
+    private final PageableFetchingPartnershipProposalUseCase pageableFetchingPartnershipProposalUseCase;
 
     @PostMapping
-    public ResponseEntity<PartnershipProposalResponse> createPartnershipProposal(@Valid @RequestBody RestCreatePartnershipProposal command,
-                                                                                 @AuthenticationPrincipal UserEntityDetails userEntityDetails) {
-        PartnershipProposalResponse result = queryPartnershipProposalUseCase.create(command.toCreatePartnershipProposalCommand(userEntityDetails.getCurrentUserId()));
+    public ResponseEntity<Response> createPartnershipProposal(@Valid @RequestBody RestCreatePartnershipProposal command,
+                                                              @AuthenticationPrincipal UserEntityDetails userEntityDetails) {
+        Response result = queryPartnershipProposalUseCase.create(command.toCreatePartnershipProposalCommand(userEntityDetails.getCurrentUserId()));
 
         if (result.isSuccess()) {
             return ResponseEntity.ok(result);
@@ -41,19 +47,20 @@ public class PartnershipProposalController {
     }
 
     @GetMapping("/{uuid}")
-    public void getPartnershipProposalByUuid(@PathVariable String uuid) {
-
+    public ResponseEntity<PartnershipProposalResponse> getPartnershipProposalByUuid(@PathVariable String uuid) {
+        Optional<PartnershipProposalResponse> partnershipProposal = queryPartnershipProposalUseCase.findByUuid(uuid);
+        return partnershipProposal.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/all")
-    public void getAllPartnershipProposal() {
-        // should be pageable
+    public Page<PartnershipProposalResponse> getAllPartnershipProposal(Pageable pageable) {
+        return pageableFetchingPartnershipProposalUseCase.fetch(pageable);
     }
 
     @PutMapping("/{uuid}")
-    public ResponseEntity<PartnershipProposalResponse> updatePartnershipProposalByUuid(@PathVariable String uuid,
-                                                                                       @Valid @RequestBody RestUpdatePartnershipProposal command) {
-        PartnershipProposalResponse result = queryPartnershipProposalUseCase.update(command.toUpdatePartnershipProposal());
+    public ResponseEntity<Response> updatePartnershipProposalByUuid(@PathVariable String uuid,
+                                                                    @Valid @RequestBody RestUpdatePartnershipProposal command) {
+        Response result = queryPartnershipProposalUseCase.update(command.toUpdatePartnershipProposal(uuid));
 
         if (result.isSuccess()) {
             return ResponseEntity.ok(result);
@@ -100,8 +107,6 @@ public class PartnershipProposalController {
     @Data
     static class RestUpdatePartnershipProposal {
         @NotBlank
-        String partnershipProposalUuid;
-        @NotBlank
         @Size(min = 5)
         String subject;
         @NotNull Industry industry;
@@ -111,9 +116,9 @@ public class PartnershipProposalController {
         String teamDescription;
         String additionalDescription;
 
-        public UpdatePartnershipProposalCommand toUpdatePartnershipProposal() {
+        public UpdatePartnershipProposalCommand toUpdatePartnershipProposal(String partnershipProposalUuid) {
             return UpdatePartnershipProposalCommand.builder()
-                    .partnershipProposalUuid(this.partnershipProposalUuid)
+                    .partnershipProposalUuid(partnershipProposalUuid)
                     .subject(this.subject)
                     .industry(this.industry)
                     .country(this.country)

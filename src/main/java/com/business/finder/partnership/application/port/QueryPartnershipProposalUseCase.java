@@ -2,6 +2,7 @@ package com.business.finder.partnership.application.port;
 
 import com.business.finder.metadata.Country;
 import com.business.finder.metadata.Industry;
+import com.business.finder.partnership.application.PartnershipProposalResponse;
 import com.business.finder.partnership.domain.PartnershipProposal;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,13 +11,15 @@ import lombok.Value;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 public interface QueryPartnershipProposalUseCase {
 
-    PartnershipProposalResponse create(CreatePartnershipProposalCommand command);
+    Response create(CreatePartnershipProposalCommand command);
 
-    PartnershipProposalResponse update(UpdatePartnershipProposalCommand command);
+    Response update(UpdatePartnershipProposalCommand command);
+
+    Optional<PartnershipProposalResponse> findByUuid(String uuid);
 
     @Value
     @Builder
@@ -57,15 +60,15 @@ public interface QueryPartnershipProposalUseCase {
     }
 
     @Value
-    class PartnershipProposalResponse {
-        public static PartnershipProposalResponse OK = new PartnershipProposalResponse(true, Collections.emptyList());
+    class Response {
+        public static Response OK = new Response(true, Collections.emptyList());
 
-        public static PartnershipProposalResponse errors(Error... errors) {
-            return new PartnershipProposalResponse(true, Arrays.asList(errors));
+        public static Response errors(Error... errors) {
+            return new Response(true, Arrays.asList(errors));
         }
 
-        public static PartnershipProposalResponse errors(List<Error> errors) {
-            return new PartnershipProposalResponse(true, errors);
+        public static Response errors(List<Error> errors) {
+            return new Response(true, errors);
         }
 
         boolean success;

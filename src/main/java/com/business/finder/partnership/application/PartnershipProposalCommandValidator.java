@@ -1,4 +1,4 @@
-package com.business.finder.partnership.application.validator;
+package com.business.finder.partnership.application;
 
 import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.CreatePartnershipProposalCommand;
 import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.Error;
@@ -12,7 +12,7 @@ import java.util.List;
 import static com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.Error.*;
 
 @Component
-public class PartnershipProposalCommandValidator {
+class PartnershipProposalCommandValidator {
 
     public List<Error> validateCreateCommand(CreatePartnershipProposalCommand command) {
         List<Error> errors = new ArrayList<>();
