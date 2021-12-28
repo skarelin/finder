@@ -6,6 +6,7 @@ import com.business.finder.partnership.application.PartnershipProposalResponse;
 import com.business.finder.partnership.application.port.PageableFetchingPartnershipProposalUseCase;
 import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase;
 import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.CreatePartnershipProposalCommand;
+import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.RemovePartnershipProposalCommand;
 import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.Response;
 import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.UpdatePartnershipProposalCommand;
 import com.business.finder.security.UserEntityDetails;
@@ -59,8 +60,9 @@ public class PartnershipProposalController {
 
     @PutMapping("/{uuid}")
     public ResponseEntity<Response> updatePartnershipProposalByUuid(@PathVariable String uuid,
-                                                                    @Valid @RequestBody RestUpdatePartnershipProposal command) {
-        Response result = queryPartnershipProposalUseCase.update(command.toUpdatePartnershipProposal(uuid));
+                                                                    @Valid @RequestBody RestUpdatePartnershipProposal command,
+                                                                    @AuthenticationPrincipal UserEntityDetails userEntityDetails) {
+        Response result = queryPartnershipProposalUseCase.update(command.toUpdatePartnershipProposal(uuid, userEntityDetails.getCurrentUserId()));
 
         if (result.isSuccess()) {
             return ResponseEntity.ok(result);
@@ -70,8 +72,10 @@ public class PartnershipProposalController {
     }
 
     @DeleteMapping("/uuid")
-    public void deletePartnershipProposalByUuid(@PathVariable String uuid) {
-
+    public ResponseEntity<Response> deletePartnershipProposalByUuid(@PathVariable String uuid,
+                                                                    @AuthenticationPrincipal UserEntityDetails userEntityDetails) {
+        return ResponseEntity.ok(
+                queryPartnershipProposalUseCase.remove(new RemovePartnershipProposalCommand(uuid, userEntityDetails.getCurrentUserId())));
     }
 
 
@@ -116,7 +120,7 @@ public class PartnershipProposalController {
         String teamDescription;
         String additionalDescription;
 
-        public UpdatePartnershipProposalCommand toUpdatePartnershipProposal(String partnershipProposalUuid) {
+        public UpdatePartnershipProposalCommand toUpdatePartnershipProposal(String partnershipProposalUuid, Long userId) {
             return UpdatePartnershipProposalCommand.builder()
                     .partnershipProposalUuid(partnershipProposalUuid)
                     .subject(this.subject)
@@ -126,6 +130,7 @@ public class PartnershipProposalController {
                     .teamAvailable(this.isTeamAvailable)
                     .teamDescription(this.teamDescription)
                     .additionalDescription(this.additionalDescription)
+                    .userId(userId)
                     .build();
         }
     }

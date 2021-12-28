@@ -1,5 +1,6 @@
 package com.business.finder.partnership.application;
 
+import com.business.finder.partnership.application.exception.NoAccessToPartnershipProposalException;
 import com.business.finder.partnership.application.exception.PartnershipProposalIsNotFoundException;
 import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase;
 import com.business.finder.partnership.db.PartnershipProposalRepository;
@@ -41,6 +42,7 @@ class QueryPartnershipProposalService implements QueryPartnershipProposalUseCase
 
         if (errors.isEmpty()) {
             return repository.findByUuid(command.getPartnershipProposalUuid())
+                    .map(partnershipProposal -> authorize(partnershipProposal, command.getUserId()))
                     .map(partnershipProposal -> {
                         updateFields(command, partnershipProposal);
                         return Response.OK;
@@ -55,6 +57,23 @@ class QueryPartnershipProposalService implements QueryPartnershipProposalUseCase
     public Optional<PartnershipProposalResponse> findByUuid(String uuid) {
         Optional<PartnershipProposal> partnershipProposal = repository.findByUuid(uuid);
         return partnershipProposal.map(mapper::toPartnershipProposalResponse);
+    }
+
+    @Override
+    public Response remove(RemovePartnershipProposalCommand command) {
+        PartnershipProposal partnershipProposal = repository.findByUuid(command.getPartnershipProposalUuid())
+                .map(proposal -> authorize(proposal, command.getCurrentUserId()))
+                .orElseThrow(() -> new PartnershipProposalIsNotFoundException("Given partnership proposal not found. UUID: " + command.getPartnershipProposalUuid()));
+
+        repository.delete(partnershipProposal);
+        return Response.OK;
+    }
+
+    private PartnershipProposal authorize(PartnershipProposal partnershipProposal, Long userId) {
+        if (!partnershipProposal.getBfUserId().equals(userId)) {
+            throw new NoAccessToPartnershipProposalException("Current user doesn't have permission to partnership proposal " + partnershipProposal.getUuid());
+        }
+        return partnershipProposal;
     }
 
     private PartnershipProposal updateFields(UpdatePartnershipProposalCommand command, PartnershipProposal partnershipProposal) {

@@ -4,7 +4,7 @@ import com.business.finder.partnership.domain.PartnershipProposal;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PartnershipProposalMapper {
+class PartnershipProposalMapper {
     PartnershipProposalResponse toPartnershipProposalResponse(PartnershipProposal proposal) {
         return PartnershipProposalResponse.builder()
                 .uuid(proposal.getUuid())

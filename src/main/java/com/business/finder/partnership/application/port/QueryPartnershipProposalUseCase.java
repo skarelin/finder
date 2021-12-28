@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Value;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +21,8 @@ public interface QueryPartnershipProposalUseCase {
     Response update(UpdatePartnershipProposalCommand command);
 
     Optional<PartnershipProposalResponse> findByUuid(String uuid);
+
+    Response remove(RemovePartnershipProposalCommand command);
 
     @Value
     @Builder
@@ -49,7 +52,7 @@ public interface QueryPartnershipProposalUseCase {
     @Value
     @Builder
     class UpdatePartnershipProposalCommand {
-        String partnershipProposalUuid;
+        @NotNull String partnershipProposalUuid;
         String subject;
         Industry industry;
         Country country;
@@ -57,6 +60,13 @@ public interface QueryPartnershipProposalUseCase {
         boolean teamAvailable;
         String teamDescription;
         String additionalDescription;
+        @NotNull Long userId;
+    }
+
+    @Value
+    class RemovePartnershipProposalCommand {
+        @NotNull String partnershipProposalUuid;
+        @NotNull Long currentUserId;
     }
 
     @Value
