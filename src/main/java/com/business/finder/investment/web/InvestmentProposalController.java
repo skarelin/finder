@@ -1,14 +1,13 @@
 package com.business.finder.investment.web;
 
 import com.business.finder.investment.application.port.CreateInvestmentProposalUseCase;
-import com.business.finder.investment.application.port.CreateInvestmentProposalUseCase.CreateInvestmentProposalData;
+import com.business.finder.investment.application.port.CreateInvestmentProposalUseCase.CreateInvestmentProposalCommand;
 import com.business.finder.investment.application.port.CreateInvestmentProposalUseCase.CreateInvestmentProposalResponse;
 import com.business.finder.metadata.Country;
 import com.business.finder.metadata.Industry;
 import com.business.finder.metadata.Language;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -62,8 +61,18 @@ public class InvestmentProposalController {
 
         private int expectedPaybackPeriod;
 
-        public CreateInvestmentProposalData toCreateInvestmentProposalData() {
-            return CreateInvestmentProposalData.builder().build();
+        public CreateInvestmentProposalCommand toCreateInvestmentProposalData() {
+            return CreateInvestmentProposalCommand.builder()
+                    .projectSubject(this.projectSubject)
+                    .projectDescription(this.projectDescription)
+                    .country(this.country)
+                    .city(this.city)
+                    .industry(this.industry)
+                    .minimumInvestmentValue(this.minimumInvestmentValue)
+                    .teamLanguage(this.teamLanguage)
+                    .projectBudget(this.projectBudget)
+                    .expectedPaybackPeriod(this.expectedPaybackPeriod)
+                    .build();
         }
     }
 

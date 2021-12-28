@@ -9,22 +9,17 @@ import lombok.Getter;
 import lombok.Value;
 import org.springframework.http.ResponseEntity;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public interface CreateInvestmentProposalUseCase {
 
-    ResponseEntity<CreateInvestmentProposalResponse> create(CreateInvestmentProposalData data);
+    ResponseEntity<CreateInvestmentProposalResponse> create(CreateInvestmentProposalCommand command);
 
     @Value
     @Builder
-    class CreateInvestmentProposalData {
+    class CreateInvestmentProposalCommand {
         String projectSubject;
         String projectDescription;
         Country country;
