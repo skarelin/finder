@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-class UserEntityDetails implements UserDetails {
+public class UserEntityDetails implements UserDetails {
     private final BfUser entity;
 
     @Override
@@ -50,5 +50,9 @@ class UserEntityDetails implements UserDetails {
     public boolean isEnabled() {
         // TODO. Use it if user is unactivated.
         return true;
+    }
+
+    public Long getCurrentUserId() {
+        return entity.getId();
     }
 }

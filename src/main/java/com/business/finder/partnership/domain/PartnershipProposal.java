@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -22,6 +23,11 @@ public class PartnershipProposal extends BaseEntity {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+//    @CreatedBy // TODO. We also need to add this.
 
     private String subject;
 
@@ -39,9 +45,8 @@ public class PartnershipProposal extends BaseEntity {
 
     private String additionalDescription;
 
-//    @ManyToOne
-//    private User user;
-
+    @Column(name = "bf_user_Id")
+    private Long bfUserId;
 
     public PartnershipProposal(String subject,
                                Industry industry,
@@ -49,7 +54,8 @@ public class PartnershipProposal extends BaseEntity {
                                String knowledgeOfProposalCreator,
                                boolean teamAvailable,
                                String teamDescription,
-                               String additionalDescription) {
+                               String additionalDescription,
+                               Long userId) {
         this.subject = subject;
         this.industry = industry;
         this.country = country;
@@ -57,5 +63,6 @@ public class PartnershipProposal extends BaseEntity {
         this.teamAvailable = teamAvailable;
         this.teamDescription = teamDescription;
         this.additionalDescription = additionalDescription;
+        this.bfUserId = userId;
     }
 }
