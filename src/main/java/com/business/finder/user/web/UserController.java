@@ -6,8 +6,6 @@ import com.business.finder.user.application.port.UpdateUserUseCase;
 import com.business.finder.user.application.port.UpdateUserUseCase.UpdateUserCommand;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
