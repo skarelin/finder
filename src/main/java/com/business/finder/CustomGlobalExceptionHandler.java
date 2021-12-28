@@ -1,5 +1,6 @@
 package com.business.finder;
 
+import com.business.finder.partnership.application.exception.PartnershipProposalIsNotFoundException;
 import com.business.finder.user.application.exception.BfUserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +30,13 @@ class CustomGlobalExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class,
             BfUserException.class})
-    public ResponseEntity<Object> handle(IllegalArgumentException ex) {
+    public ResponseEntity<Object> handleBadRequest(RuntimeException ex) {
         return handleError(HttpStatus.BAD_REQUEST, List.of(ex.getMessage()));
+    }
+
+    @ExceptionHandler({PartnershipProposalIsNotFoundException.class})
+    public ResponseEntity<Object> handleNoContent(RuntimeException ex) {
+        return handleError(HttpStatus.NO_CONTENT, List.of(ex.getMessage()));
     }
 
     private ResponseEntity<Object> handleError(HttpStatus status, List<String> errors) {

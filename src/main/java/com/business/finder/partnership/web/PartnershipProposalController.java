@@ -2,18 +2,17 @@ package com.business.finder.partnership.web;
 
 import com.business.finder.metadata.Country;
 import com.business.finder.metadata.Industry;
-import com.business.finder.partnership.application.port.CreatePartnershipProposalUseCase;
-import com.business.finder.partnership.application.port.CreatePartnershipProposalUseCase.CreatePartnershipProposalCommand;
-import com.business.finder.partnership.application.port.CreatePartnershipProposalUseCase.CreatePartnershipProposalResponse;
-import com.business.finder.security.UserSecurity;
+import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase;
+import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.CreatePartnershipProposalCommand;
+import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.PartnershipProposalResponse;
+import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.UpdatePartnershipProposalCommand;
+import com.business.finder.security.UserEntityDetails;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,12 +26,12 @@ import javax.validation.constraints.Size;
 @RequiredArgsConstructor
 public class PartnershipProposalController {
 
-    private final CreatePartnershipProposalUseCase createPartnershipProposalUseCase;
-    private final UserSecurity userSecurity;
+    private final QueryPartnershipProposalUseCase queryPartnershipProposalUseCase;
 
     @PostMapping
-    public ResponseEntity<CreatePartnershipProposalResponse> createPartnershipProposal(@Valid @RequestBody RestCreatePartnershipProposal command) {
-        CreatePartnershipProposalResponse result = createPartnershipProposalUseCase.create(command.toCreatePartnershipProposalCommand());
+    public ResponseEntity<PartnershipProposalResponse> createPartnershipProposal(@Valid @RequestBody RestCreatePartnershipProposal command,
+                                                                                 @AuthenticationPrincipal UserEntityDetails userEntityDetails) {
+        PartnershipProposalResponse result = queryPartnershipProposalUseCase.create(command.toCreatePartnershipProposalCommand(userEntityDetails.getCurrentUserId()));
 
         if (result.isSuccess()) {
             return ResponseEntity.ok(result);
@@ -41,12 +40,31 @@ public class PartnershipProposalController {
         }
     }
 
-    // TODO. Temporary method. Remove it later.
-    // Just example how to use the @AuthentificationPrincipal annotation.
-    // We can put User object into command object. Later in service we will use our UserSecurity wrapper for checking if it's admin or owner.
-    @GetMapping
-    public Object shouldBeAuthorized(@AuthenticationPrincipal UserDetails object) {
-        return object.getUsername();
+    @GetMapping("/{uuid}")
+    public void getPartnershipProposalByUuid(@PathVariable String uuid) {
+
+    }
+
+    @GetMapping("/all")
+    public void getAllPartnershipProposal() {
+        // should be pageable
+    }
+
+    @PutMapping("/{uuid}")
+    public ResponseEntity<PartnershipProposalResponse> updatePartnershipProposalByUuid(@PathVariable String uuid,
+                                                                                       @Valid @RequestBody RestUpdatePartnershipProposal command) {
+        PartnershipProposalResponse result = queryPartnershipProposalUseCase.update(command.toUpdatePartnershipProposal());
+
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
+    }
+
+    @DeleteMapping("/uuid")
+    public void deletePartnershipProposalByUuid(@PathVariable String uuid) {
+
     }
 
 
@@ -62,9 +80,40 @@ public class PartnershipProposalController {
         @NotNull Boolean isTeamAvailable;
         String teamDescription;
         String additionalDescription;
+        Long userId;
 
-        public CreatePartnershipProposalCommand toCreatePartnershipProposalCommand() {
+        public CreatePartnershipProposalCommand toCreatePartnershipProposalCommand(Long userId) {
             return CreatePartnershipProposalCommand.builder()
+                    .subject(this.subject)
+                    .industry(this.industry)
+                    .country(this.country)
+                    .knowledgeOfProposalCreator(this.knowledgeOfProposalCreator)
+                    .teamAvailable(this.isTeamAvailable)
+                    .teamDescription(this.teamDescription)
+                    .additionalDescription(this.additionalDescription)
+                    .userId(userId)
+                    .build();
+        }
+    }
+
+    //TODO. Set also MAX value here for fields.
+    @Data
+    static class RestUpdatePartnershipProposal {
+        @NotBlank
+        String partnershipProposalUuid;
+        @NotBlank
+        @Size(min = 5)
+        String subject;
+        @NotNull Industry industry;
+        @NotNull Country country;
+        @NotBlank String knowledgeOfProposalCreator;
+        @NotNull Boolean isTeamAvailable;
+        String teamDescription;
+        String additionalDescription;
+
+        public UpdatePartnershipProposalCommand toUpdatePartnershipProposal() {
+            return UpdatePartnershipProposalCommand.builder()
+                    .partnershipProposalUuid(this.partnershipProposalUuid)
                     .subject(this.subject)
                     .industry(this.industry)
                     .country(this.country)
