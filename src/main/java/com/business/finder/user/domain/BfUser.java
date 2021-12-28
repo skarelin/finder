@@ -1,6 +1,7 @@
 package com.business.finder.user.domain;
 
 import com.business.finder.jpa.BaseEntity;
+import com.business.finder.partnership.domain.PartnershipProposal;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -48,6 +49,10 @@ public class BfUser extends BaseEntity {
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles;
+
+    @OneToMany // TODO. Think about cascadeType in future. Not sure about archive process for partnership proposals.
+    @JoinColumn(name = "bf_user_Id")
+    private Set<PartnershipProposal> partnershipProposals = new HashSet<>();
 
     public BfUser(String email, String password, BfUserType bfUserType) {
         this.email = email;

@@ -16,6 +16,8 @@ Later probably we will use only one structure.
 7. (if mobile application should be updated) Change `bf.application.version` in properties for every deploy to PROD environment. (should be CI/CD in future)
 8. (not now, after logging implementation) We are using LogBack. We should log every business action.
 9. If you want to add the custom business exception, please remember to update `CustomGlobalExceptionHandler`
+10. Entity as a response should be mapped to DTO.
+11. Command should be one-directional.
 
 TODO:
 1. Add flyway;
