@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -23,6 +24,9 @@ public class InvestmentProposal extends BaseEntity {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime lastUpdateAt;
 
     private String projectSubject;
 
@@ -45,6 +49,10 @@ public class InvestmentProposal extends BaseEntity {
 
     private int expectedPaybackPeriod;
 
+    @Column(name = "bf_user_Id")
+    private Long userId;
+
+
     public InvestmentProposal(String projectSubject,
                               String projectDescription,
                               Country country, String city,
@@ -52,7 +60,8 @@ public class InvestmentProposal extends BaseEntity {
                               int minimumInvestmentValue,
                               Language teamLanguage,
                               int projectBudget,
-                              int expectedPaybackPeriod) {
+                              int expectedPaybackPeriod,
+                              Long userId) {
         this.projectSubject = projectSubject;
         this.projectDescription = projectDescription;
         this.country = country;
@@ -62,5 +71,6 @@ public class InvestmentProposal extends BaseEntity {
         this.teamLanguage = teamLanguage;
         this.projectBudget = projectBudget;
         this.expectedPaybackPeriod = expectedPaybackPeriod;
+        this.userId = userId;
     }
 }

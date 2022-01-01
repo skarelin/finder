@@ -1,5 +1,7 @@
 package com.business.finder;
 
+import com.business.finder.investment.application.exceptions.InvestmentProposalNotFoundException;
+import com.business.finder.investment.application.exceptions.NoAccessToInvestmentProposalException;
 import com.business.finder.partnership.application.exception.NoAccessToPartnershipProposalException;
 import com.business.finder.partnership.application.exception.PartnershipProposalIsNotFoundException;
 import com.business.finder.user.application.exception.BfUserException;
@@ -35,12 +37,12 @@ class CustomGlobalExceptionHandler {
         return handleError(HttpStatus.BAD_REQUEST, List.of(ex.getMessage()));
     }
 
-    @ExceptionHandler({PartnershipProposalIsNotFoundException.class})
+    @ExceptionHandler({PartnershipProposalIsNotFoundException.class, InvestmentProposalNotFoundException.class})
     public ResponseEntity<Object> handleNoContent(RuntimeException ex) {
         return handleError(HttpStatus.NO_CONTENT, List.of(ex.getMessage()));
     }
 
-    @ExceptionHandler({NoAccessToPartnershipProposalException.class})
+    @ExceptionHandler({NoAccessToPartnershipProposalException.class, NoAccessToInvestmentProposalException.class})
     public ResponseEntity<Object> handleForbidden(RuntimeException ex) {
         return handleError(HttpStatus.FORBIDDEN, List.of(ex.getMessage()));
     }
