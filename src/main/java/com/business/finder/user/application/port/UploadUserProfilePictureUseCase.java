@@ -9,19 +9,19 @@ import java.util.List;
 
 public interface UploadUserProfilePictureUseCase {
 
-    Response upload(UploadUserProfilePictureCommand command);
+    UploadUserProfilePictureResponse upload(UploadUserProfilePictureCommand command);
 
     @Value
-    class Response {
+    class UploadUserProfilePictureResponse {
 
-        public static Response OK = new Response(true, Collections.emptyList());
+        public static UploadUserProfilePictureResponse OK = new UploadUserProfilePictureResponse(true, Collections.emptyList());
 
-        public static Response error(Error error) {
-            return new Response(false, Collections.singletonList(error));
+        public static UploadUserProfilePictureResponse errors(List<ErrorCode> errors) {
+            return new UploadUserProfilePictureResponse(false, errors);
         }
 
         boolean success;
-        List<Error> errors;
+        List<ErrorCode> errors;
     }
 
     @Value
@@ -30,7 +30,7 @@ public interface UploadUserProfilePictureUseCase {
         @NotNull Long userId;
     }
 
-    enum Error {
-
+    enum ErrorCode {
+        NOT_ALLOWED_EXTENSION
     }
 }

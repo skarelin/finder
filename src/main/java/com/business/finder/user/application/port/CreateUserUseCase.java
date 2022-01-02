@@ -27,7 +27,7 @@ public interface CreateUserUseCase {
         }
 
         public static CreateUserResponse errors(Error... errors) {
-            return new CreateUserResponse(true, Arrays.asList(errors));
+            return new CreateUserResponse(false, Arrays.asList(errors));
         }
 
         boolean success;

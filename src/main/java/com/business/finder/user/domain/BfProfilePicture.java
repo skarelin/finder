@@ -1,6 +1,7 @@
 package com.business.finder.user.domain;
 
 import com.business.finder.jpa.BaseEntity;
+import com.business.finder.user.domain.type.ProfilePictureStatus;
 import com.business.finder.user.domain.type.ProfilePictureStorage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,11 +31,14 @@ public class BfProfilePicture extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProfilePictureStorage pictureStorage;
 
+    private ProfilePictureStatus status;
+
     private Long userId;
 
-    public BfProfilePicture(String fileName, Long userId) {
+    public BfProfilePicture(String fileName, Long userId, ProfilePictureStorage storage) {
         this.fileName = fileName;
         this.userId = userId;
-        this.pictureStorage = ProfilePictureStorage.LOCAL;
+        this.pictureStorage = storage;
+        this.status = ProfilePictureStatus.NEW;
     }
 }

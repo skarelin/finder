@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface LocalPictureUploaderUseCase {
 
-    Response upload(MultipartFile file, String fileName, String path);
+    LocalPictureUploadedResponse upload(MultipartFile file, String fileName, String path);
 
     @Value
-    class Response {
-        public static Response OK = new Response(true, Collections.emptyList());
+    class LocalPictureUploadedResponse {
+        public static LocalPictureUploadedResponse OK = new LocalPictureUploadedResponse(true, Collections.emptyList());
 
         boolean success;
         List<String> errors; // should be enum, if we will use it.

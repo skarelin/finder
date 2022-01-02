@@ -14,10 +14,10 @@ class LocalPictureUploaderService implements LocalPictureUploaderUseCase {
     private final PictureUploaderStrategy localPictureUploader;
 
     @Override
-    public Response upload(MultipartFile file, String fileName, String path) {
-        PictureUploaderResponse response = localPictureUploader.upload(file, "fileName", "path");
+    public LocalPictureUploadedResponse upload(MultipartFile file, String fileName, String path) {
+        PictureUploaderResponse response = localPictureUploader.upload(file, fileName, path);
         if (response.getErrors().isEmpty()) {
-            return Response.OK;
+            return LocalPictureUploadedResponse.OK;
         } else {
             throw new UploadPictureException("Unhandled business exception during uploading local picture: " + response.getErrors().get(0));
         }

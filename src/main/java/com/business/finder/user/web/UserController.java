@@ -8,6 +8,7 @@ import com.business.finder.user.application.port.UpdateUserUseCase.UpdateUserCom
 import com.business.finder.user.application.port.UpdateUserUseCase.UpdateUserResponse;
 import com.business.finder.user.application.port.UploadUserProfilePictureUseCase;
 import com.business.finder.user.application.port.UploadUserProfilePictureUseCase.UploadUserProfilePictureCommand;
+import com.business.finder.user.application.port.UploadUserProfilePictureUseCase.UploadUserProfilePictureResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.ResponseEntity;
@@ -58,8 +59,13 @@ public class UserController {
     }
 
     @PutMapping("/profile-picture")
-    public void uploadUserProfilePicture(@RequestParam MultipartFile file, @AuthenticationPrincipal UserEntityDetails userDetails) {
-        uploadUserProfilePictureUseCase.upload(new UploadUserProfilePictureCommand(file, userDetails.getCurrentUserId()));
+    public ResponseEntity<UploadUserProfilePictureResponse> uploadUserProfilePicture(@RequestParam MultipartFile file, @AuthenticationPrincipal UserEntityDetails userDetails) {
+        UploadUserProfilePictureResponse response = uploadUserProfilePictureUseCase.upload(new UploadUserProfilePictureCommand(file, userDetails.getCurrentUserId()));
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
     @Data

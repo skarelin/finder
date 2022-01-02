@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
+// TODO. Add trace-id here I think. For every RuntimeException. Easier to analyze later.
 class CustomGlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

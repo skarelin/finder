@@ -74,11 +74,11 @@ public interface QueryPartnershipProposalUseCase {
         public static Response OK = new Response(true, Collections.emptyList());
 
         public static Response errors(Error... errors) {
-            return new Response(true, Arrays.asList(errors));
+            return new Response(false, Arrays.asList(errors));
         }
 
         public static Response errors(List<Error> errors) {
-            return new Response(true, errors);
+            return new Response(false, errors);
         }
 
         boolean success;
