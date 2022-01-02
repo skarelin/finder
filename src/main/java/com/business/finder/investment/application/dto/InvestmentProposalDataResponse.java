@@ -4,23 +4,20 @@ import com.business.finder.metadata.Country;
 import com.business.finder.metadata.Industry;
 import com.business.finder.metadata.Language;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
-@Data
+@Value
 @Builder
 public class InvestmentProposalDataResponse {
-    private String projectSubject;
-    private String projectDescription;
-    private Country country;
-    private String city;
-    private Industry industry;
-    private int minimumInvestmentValue;
-    private Language teamLanguage;
-    private int projectBudget;
-    private int expectedPaybackPeriod;
-    private String investmentProposalUuid;
-    private boolean isOwner;
+    String projectSubject;
+    String projectDescription;
+    Country country;
+    String city;
+    Industry industry;
+    int minimumInvestmentValue;
+    Language teamLanguage;
+    int projectBudget;
+    int expectedPaybackPeriod;
+    String investmentProposalUuid;
+    boolean isOwner;
 }

@@ -11,24 +11,24 @@ import lombok.Getter;
 import lombok.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public interface QueryInvestmentProposalUseCase {
 
-    ResponseEntity<InvestmentProposalResponse> create(CreateInvestmentProposalCommand command);
+    InvestmentProposalResponse create(CreateInvestmentProposalCommand command);
 
-    ResponseEntity<InvestmentProposalResponse> update(UpdateInvestmentProposalCommand command);
+    InvestmentProposalResponse update(UpdateInvestmentProposalCommand command);
 
-    ResponseEntity<InvestmentProposalDataResponse> findByUuid(String investmentProposalUuid, Long userId);
+    Optional<InvestmentProposalDataResponse> findByUuid(String investmentProposalUuid, Long userId);
 
-    ResponseEntity<InvestmentProposalResponse> delete(String investmentProposalUuid, Long userId);
+    InvestmentProposalResponse delete(String investmentProposalUuid, Long userId);
 
-    Page<InvestmentProposalDataResponse> fetch(Pageable pageable, Long userId);
+    Page<InvestmentProposalDataResponse> fetchProposalsPageable(Pageable pageable, Long userId);
 
 
 
@@ -121,7 +121,7 @@ public interface QueryInvestmentProposalUseCase {
             return new InvestmentProposalResponse(false, Arrays.asList(error));
         }
 
-        boolean result;
+        boolean success;
         List<Error> errors;
     }
 

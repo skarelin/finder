@@ -7,6 +7,8 @@ import com.business.finder.investment.application.mapper.InvestmentProposalMappe
 import com.business.finder.investment.application.port.QueryInvestmentProposalUseCase;
 import com.business.finder.investment.db.InvestmentProposalRepository;
 import com.business.finder.investment.domain.InvestmentProposal;
+import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase;
+import com.business.finder.partnership.domain.PartnershipProposal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -27,59 +31,58 @@ public class QueryInvestmentProposalService implements QueryInvestmentProposalUs
     private final InvestmentProposalMapper mapper;
 
     @Override
-    public ResponseEntity<InvestmentProposalResponse> create(CreateInvestmentProposalCommand command) {
+    public InvestmentProposalResponse create(CreateInvestmentProposalCommand command) {
         List<Error> errors = validator.validateCreateInvestment(command);
         if (errors.isEmpty()) {
             repository.save(command.toInvestmentProposal());
-            return ResponseEntity.ok(InvestmentProposalResponse.ok);
+            return InvestmentProposalResponse.ok;
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(InvestmentProposalResponse.errors(errors));
+            return InvestmentProposalResponse.errors(errors);
         }
     }
 
     @Override
-    public ResponseEntity<InvestmentProposalResponse> update(UpdateInvestmentProposalCommand command) {
+    @Transactional
+    public InvestmentProposalResponse update(UpdateInvestmentProposalCommand command) {
         List<Error> errors = validator.validateUpdateInvestment(command);
         if (errors.isEmpty()) {
             return repository.findByUuid(command.getInvestmentProposalUuid())
                     .map(investmentProposal -> authorize(investmentProposal, command.getUserId()))
                     .map(investmentProposal -> {
-                        updateDate(investmentProposal, command);
-                        repository.save(investmentProposal);
-                        return ResponseEntity.ok(InvestmentProposalResponse.ok);
+                        updateData(investmentProposal, command);
+                        return InvestmentProposalResponse.ok;
                     })
                     .orElseThrow(() -> new InvestmentProposalNotFoundException("Investment proposal is not found during updating request. UUID:" + command.getInvestmentProposalUuid()));
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(InvestmentProposalResponse.errors(errors));
+            return InvestmentProposalResponse.errors(errors);
         }
     }
 
     @Override
-    public ResponseEntity<InvestmentProposalDataResponse> findByUuid(String investmentProposalUuid, Long userId) {
-        return ResponseEntity.ok(repository.findByUuid(investmentProposalUuid)
-                .map(investmentProposal -> createGetResponse(investmentProposal, userId))
-                .orElseThrow(() -> new InvestmentProposalNotFoundException("Not found Investment proposal with investmentProposalUuid: " + investmentProposalUuid)));
+    public Optional<InvestmentProposalDataResponse> findByUuid(String investmentProposalUuid, Long userId) {
+        return repository.findByUuid(investmentProposalUuid)
+                .map(investmentProposal -> createResponse(investmentProposal, userId));
 
     }
 
     @Override
-    public ResponseEntity<InvestmentProposalResponse> delete(String investmentProposalUuid, Long userId) {
+    public InvestmentProposalResponse delete(String investmentProposalUuid, Long userId) {
         InvestmentProposal proposal = repository
                 .findByUuid(investmentProposalUuid)
                 .map(investmentProposal -> authorize(investmentProposal, userId))
                 .orElseThrow(() -> new InvestmentProposalNotFoundException("Not found Investment proposal with investmentProposalUuid: " + investmentProposalUuid));
         repository.delete(proposal);
-        return ResponseEntity.ok(InvestmentProposalResponse.ok);
+        return InvestmentProposalResponse.ok;
     }
 
     @Override
-    public Page<InvestmentProposalDataResponse> fetch(Pageable pageable, Long userId) {
+    public Page<InvestmentProposalDataResponse> fetchProposalsPageable(Pageable pageable, Long userId) {
         return repository
                 .findAll(pageable)
-                .map(investmentProposal -> createGetResponse(investmentProposal, userId));
+                .map(investmentProposal -> createResponse(investmentProposal, userId));
     }
 
-    private void updateDate(InvestmentProposal investmentProposal, UpdateInvestmentProposalCommand command) {
+    private void updateData(InvestmentProposal investmentProposal, UpdateInvestmentProposalCommand command) {
         investmentProposal.setProjectSubject(command.getProjectSubject());
         investmentProposal.setProjectDescription(command.getProjectDescription());
         investmentProposal.setCountry(command.getCountry());
@@ -91,10 +94,8 @@ public class QueryInvestmentProposalService implements QueryInvestmentProposalUs
         investmentProposal.setExpectedPaybackPeriod(command.getExpectedPaybackPeriod());
     }
 
-    private InvestmentProposalDataResponse createGetResponse(InvestmentProposal investmentProposal, Long userId) {
-        GetInvestmentProposalCommand getInvestmentProposalCommand = GetInvestmentProposalCommand.fromInvestmentProposal(investmentProposal);
-        getInvestmentProposalCommand.setOwner(isAdvertOwner(getInvestmentProposalCommand.getUserId(), userId));
-        return mapper.toInvestmentProposalDataResponse(getInvestmentProposalCommand);
+    private InvestmentProposalDataResponse createResponse(InvestmentProposal investmentProposal, Long userId) {
+        return mapper.toInvestmentProposalDataResponse(investmentProposal, isAdvertOwner(investmentProposal.getUserId(), userId));
     }
 
     private boolean isAdvertOwner(Long userIdOwnerProposal, Long currentUserId) {

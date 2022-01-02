@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,30 +36,44 @@ public class InvestmentProposalController {
 
     @PostMapping
     public ResponseEntity<InvestmentProposalResponse> createInvestmentProposal(@AuthenticationPrincipal UserEntityDetails userEntityDetails,  @Valid @RequestBody RestCreateInvestmentProposal data) {
-        return queryInvestmentProposalUseCase.create(data.toCreateInvestmentProposalCommand(userEntityDetails.getCurrentUserId()));
+        InvestmentProposalResponse result = queryInvestmentProposalUseCase.create(data.toCreateInvestmentProposalCommand(userEntityDetails.getCurrentUserId()));
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
     }
 
     @PutMapping("/{investmentProposalUuid}")
     public ResponseEntity<InvestmentProposalResponse> updateInvestmentProposal(@PathVariable  String investmentProposalUuid, @AuthenticationPrincipal UserEntityDetails userEntityDetails, @Valid @RequestBody RestUpdateInvestmentProposal data){
-        return queryInvestmentProposalUseCase.update(data.toUpdateInvestmentProposalCommand(userEntityDetails.getCurrentUserId(), investmentProposalUuid));
+        InvestmentProposalResponse result = queryInvestmentProposalUseCase.update(data.toUpdateInvestmentProposalCommand(userEntityDetails.getCurrentUserId(), investmentProposalUuid));
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
     }
 
     @GetMapping("/{investmentProposalUuid}")
     public ResponseEntity<InvestmentProposalDataResponse> getInvestmentProposal(@PathVariable  String investmentProposalUuid, @AuthenticationPrincipal UserEntityDetails userEntityDetails){
-        return queryInvestmentProposalUseCase.findByUuid(investmentProposalUuid, userEntityDetails.getCurrentUserId());
+        return queryInvestmentProposalUseCase.findByUuid(investmentProposalUuid, userEntityDetails.getCurrentUserId())
+                .map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/all")
-    public Page<InvestmentProposalDataResponse> getAllInvestmentProposal(Pageable pageable, @AuthenticationPrincipal UserEntityDetails userEntityDetails){
-        return queryInvestmentProposalUseCase.fetch(pageable, userEntityDetails.getCurrentUserId());
+    public Page<InvestmentProposalDataResponse> getPageableInvestmentProposals(Pageable pageable, @AuthenticationPrincipal UserEntityDetails userEntityDetails){
+        return queryInvestmentProposalUseCase.fetchProposalsPageable(pageable, userEntityDetails.getCurrentUserId());
     }
 
     @DeleteMapping({"/{investmentProposalUuid}"})
     public ResponseEntity<InvestmentProposalResponse> deleteInvestmentProposal(@PathVariable String investmentProposalUuid, @AuthenticationPrincipal UserEntityDetails userEntityDetails){
-        return queryInvestmentProposalUseCase.delete(investmentProposalUuid, userEntityDetails.getCurrentUserId());
+        InvestmentProposalResponse result = queryInvestmentProposalUseCase.delete(investmentProposalUuid, userEntityDetails.getCurrentUserId());
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
     }
-
-
 
     @Data
     static class RestCreateInvestmentProposal {
