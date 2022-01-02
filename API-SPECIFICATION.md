@@ -24,6 +24,11 @@ PUT: /partnership-proposal/{partnership-proposal-uuid} -> update given partnersh
 
 DELETE: /partnership-proposal/{partnership-proposal-uuid} -> delete proposal by UUID;
 
+==============================[User-Profile-Picture-Controller]
+PUT: /user/profile-picture/ -> update user profile picture. (contains also add operation);
+
+DELETE: /user/profile-picture/ -> remove user profile picture.
+
 PartnershipProposalEntity(WIP):
 - subject;
 - description;

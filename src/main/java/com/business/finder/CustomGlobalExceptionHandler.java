@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -27,6 +28,11 @@ class CustomGlobalExceptionHandler {
             .map(x -> x.getField() + " - " + x.getDefaultMessage())
             .collect(Collectors.toList());
         return handleError(HttpStatus.BAD_REQUEST, errors);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<Object> handleMaxSizeException(MaxUploadSizeExceededException exc) {
+        return handleError(HttpStatus.EXPECTATION_FAILED, List.of("Unable to upload. File is too large! Internal info: " + exc));
     }
 
     @ExceptionHandler({IllegalArgumentException.class,

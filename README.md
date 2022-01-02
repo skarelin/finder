@@ -37,3 +37,31 @@ Mobile app:
 1. Announcement
 2. Announcement -> update.
 3. "Remove user" button should be implemented in application for sure.
+
+
+
+Questions:
+
+Form Partnership Proposal:
+1. Subject
+2. Industry
+3. Country
+4. City
+5. KnowledgeOfProposalCreator
+6. Team Available
+7. Team Description
+8. Additional Description
+9. Team language
+10. Attachment? (business plan)
+
+Form Investment Proposal:
+1. Subject
+2. Project Description
+3. Country 
+4. City
+5. Team language (optional)
+6. Min investment (optional)
+7. Project Budget (optional)
+8. Payback period (optional)
+9. History of company (optional)
+10. Attachment? (business plan)
