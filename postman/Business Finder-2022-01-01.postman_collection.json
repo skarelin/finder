@@ -1,0 +1,283 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Business Finder",
+		"_postman_id": "5029393f-23d7-0b68-450b-654f4de5b323",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Partnership-Proposal-Controller",
+			"description": "",
+			"item": [
+				{
+					"name": "Fetch pageable partnership-proposal",
+					"request": {
+						"url": "{{host}}/partnership-proposal/all",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"subject\": \"Software House. I am senior developer\",\n\t\"industry\": \"IT\",\n\t\"country\": \"USA\",\n\t\"knowledgeOfProposalCreator\": \"I am a senior developer. I know java, spring and reactive programming. Also, I am a good leader\",\n\t\"isTeamAvailable\": true,\n\t\"teamDescription\": \"I work with my one friend. He is senior front-end developer\",\n\t\"additionalDescription\": \"Feel free to join us! We have daily, we are paying money and % from our company!\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Add partnership proposal",
+					"request": {
+						"url": "{{host}}/partnership-proposal",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"subject\": \"Software House. I am senior developer\",\n\t\"industry\": \"IT\",\n\t\"country\": \"USA\",\n\t\"knowledgeOfProposalCreator\": \"I am a senior developer. I know java, spring and reactive programming. Also, I am a good leader\",\n\t\"isTeamAvailable\": true,\n\t\"teamDescription\": \"I work with my one friend. He is senior front-end developer\",\n\t\"additionalDescription\": \"Feel free to join us! We have daily, we are paying money and % from our company!\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User-Controller",
+			"description": "",
+			"item": [
+				{
+					"name": "Delete current user",
+					"request": {
+						"url": {
+							"raw": "{{host}}/user?email=karelin",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "karelin"
+								}
+							],
+							"variable": []
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"karelin@gmail.com\",\n\t\"password\": \"123123\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Change user description",
+					"request": {
+						"url": "{{host}}/user",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"profileDescription\": \"Hello, I am Sergey Karelin - Senior Java Developer. Feel free to contact with me!\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Investment-Proposal-Controller",
+			"description": "",
+			"item": [
+				{
+					"name": "Add investment proposal",
+					"request": {
+						"url": "{{host}}/investment-proposal",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"projectSubject\": \"Software House 3\",\n\t\"projectDescription\": \"Create smart house with maximum low price\",\n\t\"industry\": \"IT\",\n\t\"country\": \"USA\",\n\t\"city\":\"Washington\",\n\t\"minimumInvestmentValue\": 10000,\n\t\"projectBudget\": 500000,\n\t\"teamLanguage\": \"EN\",\n\t\"expectedPaybackPeriod\": 50\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get investment proposal",
+					"request": {
+						"url": "{{host}}/investment-proposal/4ee0e0f6-bba6-4311-aa9a-20d5895a222b",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Add investment uuid like a PathVariable;"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all investment proposals",
+					"request": {
+						"url": "{{host}}/investment-proposal/all",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update investment proposal",
+					"request": {
+						"url": "{{host}}/investment-proposal/41ad570c-3f93-436e-8e35-fb8ed0ff1065",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"projectSubject\": \"Software House after update\",\n\t\"projectDescription\": \"Create smart house with maximum low price\",\n\t\"industry\": \"IT\",\n\t\"country\": \"USA\",\n\t\"city\":\"Washington\",\n\t\"minimumInvestmentValue\": 10000,\n\t\"projectBudget\": 500000,\n\t\"teamLanguage\": \"EN\",\n\t\"expectedPaybackPeriod\": 50\n}"
+						},
+						"description": "Add investment uuid like a PathVariable;"
+					},
+					"response": []
+				},
+				{
+					"name": "Deletel investment proposal",
+					"request": {
+						"url": "{{host}}/investment-proposal/41ad570c-3f93-436e-8e35-fb8ed0ff1065",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Add investment uuid like a PathVariable;"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Register User",
+			"request": {
+				"url": "{{host}}/register",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"karelin@gmail.com\",\n    \"password\": \"123123\",\n    \"userType\": \"PERSONAL\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"request": {
+				"url": "{{host}}/login",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"karelin@gmail.com\",\n\t\"password\": \"123123\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Logout user",
+			"request": {
+				"url": "{{host}}/logout",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"karelin@gmail.com\",\n\t\"password\": \"123123\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
