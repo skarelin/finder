@@ -1,9 +1,13 @@
 package com.business.finder.user.web;
 
+import com.business.finder.security.UserEntityDetails;
 import com.business.finder.user.application.port.DeleteUserUseCase;
 import com.business.finder.user.application.port.DeleteUserUseCase.DeleteUserResponse;
 import com.business.finder.user.application.port.UpdateUserUseCase;
 import com.business.finder.user.application.port.UpdateUserUseCase.UpdateUserCommand;
+import com.business.finder.user.application.port.UpdateUserUseCase.UpdateUserResponse;
+import com.business.finder.user.application.port.UploadUserProfilePictureUseCase;
+import com.business.finder.user.application.port.UploadUserProfilePictureUseCase.UploadUserProfilePictureCommand;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +15,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
@@ -25,6 +30,7 @@ public class UserController {
 
     private final DeleteUserUseCase deleteUserUseCase;
     private final UpdateUserUseCase updateUserUseCase;
+    private final UploadUserProfilePictureUseCase uploadUserProfilePictureUseCase;
 
     @DeleteMapping
     public ResponseEntity<DeleteUserResponse> deleteUser(@RequestParam String email, @AuthenticationPrincipal UserDetails user) {
@@ -40,10 +46,20 @@ public class UserController {
         }
     }
 
-    // TODO. Profile picture should be here. Probably MultipartFile and send it to server;
+
     @PutMapping
-    public void updateUser(@Valid @RequestBody RestUpdateUserCommand command, @AuthenticationPrincipal UserDetails user) {
-        updateUserUseCase.update(command.toUpdateUserCommand(user.getUsername()));
+    public ResponseEntity<UpdateUserResponse> updateUser(@Valid @RequestBody RestUpdateUserCommand command, @AuthenticationPrincipal UserDetails user) {
+        UpdateUserResponse response = updateUserUseCase.update(command.toUpdateUserCommand(user.getUsername()));
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @PutMapping("/profile-picture")
+    public void uploadUserProfilePicture(@RequestParam MultipartFile file, @AuthenticationPrincipal UserEntityDetails userDetails) {
+        uploadUserProfilePictureUseCase.upload(new UploadUserProfilePictureCommand(file, userDetails.getCurrentUserId()));
     }
 
     @Data

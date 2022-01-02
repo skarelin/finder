@@ -14,7 +14,7 @@ public interface UpdateUserUseCase {
         public static UpdateUserResponse OK = new UpdateUserResponse(true, Collections.emptyList());
 
         boolean success;
-        List<DeleteUserUseCase.Error> errors;
+        List<DeleteUserUseCase.Error> errors;// TODO(skarelin): DeleteUserUseCase.Error?? Fix it.
     }
 
     @Value

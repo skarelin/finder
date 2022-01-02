@@ -2,6 +2,8 @@ package com.business.finder.user.domain;
 
 import com.business.finder.jpa.BaseEntity;
 import com.business.finder.partnership.domain.PartnershipProposal;
+import com.business.finder.user.domain.type.BfUserStatus;
+import com.business.finder.user.domain.type.BfUserType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package com.business.finder.user.application.port;
 
-import com.business.finder.user.domain.BfUserType;
+import com.business.finder.user.domain.type.BfUserType;
 import lombok.Value;
 
 import java.util.Arrays;
