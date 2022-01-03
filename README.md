@@ -15,6 +15,8 @@ TODO:
 11. Announcements to users.
 12. Change Error enum to ErrorCode. It's more readable.
 13. Compare Partnership and Investment entities. For example Language enum should be already added!
+14. Limit for proposals: 50. Smart value should be included I think.
+15. After updating proposals we also need to approve it in Admin panel. Let's just set "NEW" or "UPDATED" status in entities.
 
 Mobile app:
 

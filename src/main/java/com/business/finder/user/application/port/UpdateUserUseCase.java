@@ -1,5 +1,6 @@
 package com.business.finder.user.application.port;
 
+import lombok.ToString;
 import lombok.Value;
 
 import javax.validation.constraints.NotBlank;
@@ -18,6 +19,7 @@ public interface UpdateUserUseCase {
     }
 
     @Value
+    @ToString
     class UpdateUserCommand {
         String userDescription;
         @NotBlank String userEmail;

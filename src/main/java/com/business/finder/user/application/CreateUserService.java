@@ -4,6 +4,7 @@ import com.business.finder.user.application.port.CreateUserUseCase;
 import com.business.finder.user.db.BfUserRepository;
 import com.business.finder.user.domain.BfUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import static com.business.finder.user.application.port.CreateUserUseCase.Error.
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 class CreateUserService implements CreateUserUseCase {
 
     private final BfUserRepository bfUserRepository;
@@ -25,6 +27,7 @@ class CreateUserService implements CreateUserUseCase {
                 passwordEncoder.encode(command.getPassword()),
                 command.getUserType());
         bfUserRepository.save(bfUser);
+        log.info("Created new user: " + bfUser);
         return CreateUserResponse.OK;
     }
 }

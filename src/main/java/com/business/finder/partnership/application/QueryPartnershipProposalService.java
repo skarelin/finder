@@ -6,6 +6,7 @@ import com.business.finder.partnership.application.port.QueryPartnershipProposal
 import com.business.finder.partnership.db.PartnershipProposalRepository;
 import com.business.finder.partnership.domain.PartnershipProposal;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 class QueryPartnershipProposalService implements QueryPartnershipProposalUseCase {
 
     private final PartnershipProposalRepository repository;
@@ -27,7 +29,8 @@ class QueryPartnershipProposalService implements QueryPartnershipProposalUseCase
 
         if (errors.isEmpty()) {
             PartnershipProposal partnershipProposal = command.toPartnershipProposal();
-            repository.save(partnershipProposal);
+            PartnershipProposal savedProposal = repository.save(partnershipProposal);
+            log.info("Created partnership proposal " + savedProposal.getUuid() + " by user " + command.getUserId());
             return Response.OK;
         } else {
             return Response.errors(errors);
@@ -45,6 +48,7 @@ class QueryPartnershipProposalService implements QueryPartnershipProposalUseCase
                     .map(partnershipProposal -> authorize(partnershipProposal, command.getUserId()))
                     .map(partnershipProposal -> {
                         updateFields(command, partnershipProposal);
+                        log.info("Updated partnership proposal " + partnershipProposal.getUuid() + " by user " + command.getUserId());
                         return Response.OK;
                     })
                     .orElseThrow(() -> new PartnershipProposalIsNotFoundException("Partnership proposal is not found during updating request. UUID: " + command.getPartnershipProposalUuid()));
@@ -64,13 +68,14 @@ class QueryPartnershipProposalService implements QueryPartnershipProposalUseCase
         PartnershipProposal partnershipProposal = repository.findByUuid(command.getPartnershipProposalUuid())
                 .map(proposal -> authorize(proposal, command.getCurrentUserId()))
                 .orElseThrow(() -> new PartnershipProposalIsNotFoundException("Given partnership proposal not found. UUID: " + command.getPartnershipProposalUuid()));
-
+        log.info("Removing partnership proposal " + partnershipProposal.getUuid() + " by user " + command.getCurrentUserId());
         repository.delete(partnershipProposal);
         return Response.OK;
     }
 
     private PartnershipProposal authorize(PartnershipProposal partnershipProposal, Long userId) {
         if (!partnershipProposal.getBfUserId().equals(userId)) {
+            log.error("User " + userId + " tried to get access for not his proposal " + partnershipProposal.getUuid());
             throw new NoAccessToPartnershipProposalException("Current user doesn't have permission to partnership proposal " + partnershipProposal.getUuid());
         }
         return partnershipProposal;

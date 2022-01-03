@@ -1,5 +1,6 @@
 package com.business.finder;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -10,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @Component
+@Slf4j
 public class ApplicationInitializer implements ApplicationRunner {
 
     @Value("${bf.user.profile.picture.folder}")
@@ -17,6 +19,7 @@ public class ApplicationInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        log.info("Creating directories for local profile pictures...");
         createDirectoriesForLocalProfilePictures();
     }
 

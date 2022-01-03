@@ -9,6 +9,7 @@ import com.business.finder.user.domain.BfProfilePicture;
 import com.business.finder.user.domain.type.ProfilePictureStatus;
 import com.business.finder.user.domain.type.ProfilePictureStorage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UploadUserProfilePictureService implements UploadUserProfilePictureUseCase {
 
     @Value("${bf.user.profile.picture.folder}")
@@ -49,6 +51,7 @@ public class UploadUserProfilePictureService implements UploadUserProfilePicture
             savedEntity.setStatus(ProfilePictureStatus.PICTURE_UPLOADED);
         }
 
+        log.info("Added profile picture for user: " + command.getUserId());
         return UploadUserProfilePictureResponse.OK;
     }
 
