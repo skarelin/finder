@@ -19,9 +19,6 @@ class InvestmentProposalCommandValidator {
         if (command.getMinimumInvestmentValue() > 0 && command.getProjectBudget() == 0){
             errors.add(Error.PROJECT_BUDGET_SHOULD_BE_PRESENT);
         }
-        if(command.getUserId() == null) {
-            errors.add(Error.USER_IS_NOT_PRESENT);
-        }
         return errors;
     }
 

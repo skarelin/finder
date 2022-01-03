@@ -5,6 +5,7 @@ import com.business.finder.investment.application.port.QueryInvestmentProposalUs
 import com.business.finder.investment.application.port.QueryInvestmentProposalUseCase.CreateInvestmentProposalCommand;
 import com.business.finder.investment.application.port.QueryInvestmentProposalUseCase.InvestmentProposalResponse;
 import com.business.finder.investment.application.port.QueryInvestmentProposalUseCase.UpdateInvestmentProposalCommand;
+import com.business.finder.investment.application.port.QueryInvestmentProposalUseCase.RemoveInvestmentProposalCommand;
 import com.business.finder.metadata.Country;
 import com.business.finder.metadata.Industry;
 import com.business.finder.metadata.Language;
@@ -67,7 +68,7 @@ public class InvestmentProposalController {
 
     @DeleteMapping({"/{investmentProposalUuid}"})
     public ResponseEntity<InvestmentProposalResponse> deleteInvestmentProposal(@PathVariable String investmentProposalUuid, @AuthenticationPrincipal UserEntityDetails userEntityDetails){
-        InvestmentProposalResponse result = queryInvestmentProposalUseCase.delete(investmentProposalUuid, userEntityDetails.getCurrentUserId());
+        InvestmentProposalResponse result = queryInvestmentProposalUseCase.remove(new RemoveInvestmentProposalCommand(investmentProposalUuid, userEntityDetails.getCurrentUserId()));
         if (result.isSuccess()) {
             return ResponseEntity.ok(result);
         } else {

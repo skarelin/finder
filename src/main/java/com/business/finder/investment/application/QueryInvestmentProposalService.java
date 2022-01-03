@@ -7,13 +7,10 @@ import com.business.finder.investment.application.mapper.InvestmentProposalMappe
 import com.business.finder.investment.application.port.QueryInvestmentProposalUseCase;
 import com.business.finder.investment.db.InvestmentProposalRepository;
 import com.business.finder.investment.domain.InvestmentProposal;
-import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase;
-import com.business.finder.partnership.domain.PartnershipProposal;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,21 +18,22 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class QueryInvestmentProposalService implements QueryInvestmentProposalUseCase {
 
     private final InvestmentProposalRepository repository;
-
     private final InvestmentProposalCommandValidator validator;
-
     private final InvestmentProposalMapper mapper;
 
     @Override
     public InvestmentProposalResponse create(CreateInvestmentProposalCommand command) {
         List<Error> errors = validator.validateCreateInvestment(command);
         if (errors.isEmpty()) {
-            repository.save(command.toInvestmentProposal());
-            return InvestmentProposalResponse.ok;
+            InvestmentProposal savedProposal = command.toInvestmentProposal();
+            repository.save(savedProposal);
+            log.info("Created investment proposal " + savedProposal.getUuid() + " by user " + command.getUserId());
+            return InvestmentProposalResponse.OK;
         } else {
             return InvestmentProposalResponse.errors(errors);
         }
@@ -50,7 +48,8 @@ public class QueryInvestmentProposalService implements QueryInvestmentProposalUs
                     .map(investmentProposal -> authorize(investmentProposal, command.getUserId()))
                     .map(investmentProposal -> {
                         updateData(investmentProposal, command);
-                        return InvestmentProposalResponse.ok;
+                        log.info("Updated investment proposal " + investmentProposal.getUuid() + " by user " + command.getUserId());
+                        return InvestmentProposalResponse.OK;
                     })
                     .orElseThrow(() -> new InvestmentProposalNotFoundException("Investment proposal is not found during updating request. UUID:" + command.getInvestmentProposalUuid()));
         } else {
@@ -65,14 +64,14 @@ public class QueryInvestmentProposalService implements QueryInvestmentProposalUs
 
     }
 
-    @Override
-    public InvestmentProposalResponse delete(String investmentProposalUuid, Long userId) {
+    public InvestmentProposalResponse remove(RemoveInvestmentProposalCommand command) {
         InvestmentProposal proposal = repository
-                .findByUuid(investmentProposalUuid)
-                .map(investmentProposal -> authorize(investmentProposal, userId))
-                .orElseThrow(() -> new InvestmentProposalNotFoundException("Not found Investment proposal with investmentProposalUuid: " + investmentProposalUuid));
+                .findByUuid(command.getInvestmentProposalUuid())
+                .map(investmentProposal -> authorize(investmentProposal, command.getCurrentUserId()))
+                .orElseThrow(() -> new InvestmentProposalNotFoundException("Not found Investment proposal with investmentProposalUuid: " + command.getInvestmentProposalUuid()));
+        log.info("Removing investment proposal " + proposal.getUuid() + " by user " + command.getCurrentUserId());
         repository.delete(proposal);
-        return InvestmentProposalResponse.ok;
+        return InvestmentProposalResponse.OK;
     }
 
     @Override
@@ -104,6 +103,7 @@ public class QueryInvestmentProposalService implements QueryInvestmentProposalUs
 
     private InvestmentProposal authorize(InvestmentProposal investmentProposal, Long userId) {
         if (!investmentProposal.getUserId().equals(userId)) {
+            log.error("User " + userId + " tried to get access for not his proposal " + investmentProposal.getUuid());
             throw new NoAccessToInvestmentProposalException("Current user doesn't have permission to partnership proposal " + investmentProposal.getUuid());
         }
         return investmentProposal;

@@ -7,7 +7,6 @@ import com.business.finder.metadata.Industry;
 import com.business.finder.metadata.Language;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +25,7 @@ public interface QueryInvestmentProposalUseCase {
 
     Optional<InvestmentProposalDataResponse> findByUuid(String investmentProposalUuid, Long userId);
 
-    InvestmentProposalResponse delete(String investmentProposalUuid, Long userId);
+    InvestmentProposalResponse remove(RemoveInvestmentProposalCommand command);
 
     Page<InvestmentProposalDataResponse> fetchProposalsPageable(Pageable pageable, Long userId);
 
@@ -44,7 +43,7 @@ public interface QueryInvestmentProposalUseCase {
         Language teamLanguage;
         int projectBudget;
         int expectedPaybackPeriod;
-        Long userId;
+        @NotNull Long userId;
         public InvestmentProposal toInvestmentProposal(){
             return new InvestmentProposal(this.projectSubject,
                     this.projectDescription,
@@ -73,6 +72,12 @@ public interface QueryInvestmentProposalUseCase {
         int projectBudget;
         int expectedPaybackPeriod;
         Long userId;
+    }
+
+    @Value
+    class RemoveInvestmentProposalCommand {
+        @NotNull String investmentProposalUuid;
+        @NotNull Long currentUserId;
     }
 
     @Data
@@ -111,7 +116,7 @@ public interface QueryInvestmentProposalUseCase {
     @Value
     class InvestmentProposalResponse {
 
-        public static InvestmentProposalResponse ok = new InvestmentProposalResponse(true, Collections.emptyList());
+        public static InvestmentProposalResponse OK = new InvestmentProposalResponse(true, Collections.emptyList());
 
         public static InvestmentProposalResponse errors(List<Error> errors){
             return new InvestmentProposalResponse(false, errors);
@@ -126,7 +131,6 @@ public interface QueryInvestmentProposalUseCase {
     }
 
 
-    @Getter
     enum Error{
         PROJECT_BUDGET_SHOULD_BE_PRESENT, USER_IS_NOT_PRESENT
     }
