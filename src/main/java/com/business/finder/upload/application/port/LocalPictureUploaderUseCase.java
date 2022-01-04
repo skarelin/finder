@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface LocalPictureUploaderUseCase {
 
-    LocalPictureUploadedResponse upload(MultipartFile file, String fileName, String path);
+    LocalPictureUploadedResponse uploadAndReplace(MultipartFile file, String fileName, String path);
 
     @Value
     class LocalPictureUploadedResponse {

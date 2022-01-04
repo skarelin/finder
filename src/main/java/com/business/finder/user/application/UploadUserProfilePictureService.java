@@ -45,7 +45,7 @@ public class UploadUserProfilePictureService implements UploadUserProfilePicture
         BfProfilePicture entity = new BfProfilePicture(fileName, command.getUserId(), ProfilePictureStorage.LOCAL);
         BfProfilePicture savedEntity = profilePictureRepository.save(entity);
 
-        LocalPictureUploadedResponse response = localPictureUploaderUseCase.upload(command.getFile(), fileName, userProfilePictureFolder);
+        LocalPictureUploadedResponse response = localPictureUploaderUseCase.uploadAndReplace(command.getFile(), fileName, userProfilePictureFolder);
 
         if (response.isSuccess()) {
             savedEntity.setStatus(ProfilePictureStatus.PICTURE_UPLOADED);

@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 class ExternalServiceUploader implements PictureUploaderStrategy {
 
     @Override
-    public PictureUploaderResponse upload(MultipartFile file, String fileName, String path) {
+    public PictureUploaderResponse uploadAndReplace(MultipartFile file, String fileName, String path) {
         throw new NotYetImplementedException("ExternalServiceUploader strategy is only template. It's not implemented at this moment.");
     }
 

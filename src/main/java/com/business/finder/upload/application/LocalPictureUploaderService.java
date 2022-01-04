@@ -14,8 +14,8 @@ class LocalPictureUploaderService implements LocalPictureUploaderUseCase {
     private final PictureUploaderStrategy localPictureUploader;
 
     @Override
-    public LocalPictureUploadedResponse upload(MultipartFile file, String fileName, String path) {
-        PictureUploaderResponse response = localPictureUploader.upload(file, fileName, path);
+    public LocalPictureUploadedResponse uploadAndReplace(MultipartFile file, String fileName, String path) {
+        PictureUploaderResponse response = localPictureUploader.uploadAndReplace(file, fileName, path);
         if (response.getErrors().isEmpty()) {
             return LocalPictureUploadedResponse.OK;
         } else {
