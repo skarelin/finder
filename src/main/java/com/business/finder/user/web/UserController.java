@@ -60,7 +60,9 @@ public class UserController {
 
     @PutMapping("/profile-picture")
     public ResponseEntity<UploadUserProfilePictureResponse> uploadUserProfilePicture(@RequestParam MultipartFile file, @AuthenticationPrincipal UserEntityDetails userDetails) {
-        UploadUserProfilePictureResponse response = uploadUserProfilePictureUseCase.upload(new UploadUserProfilePictureCommand(file, userDetails.getCurrentUserId()));
+        UploadUserProfilePictureResponse response = uploadUserProfilePictureUseCase.upload(new UploadUserProfilePictureCommand(file,
+                userDetails.getCurrentUserId(),
+                userDetails.getCurrentUserUuid()));
         if (response.isSuccess()) {
             return ResponseEntity.ok(response);
         } else {

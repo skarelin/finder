@@ -25,6 +25,7 @@ public class ApplicationInitializer implements ApplicationRunner {
 
     private void createDirectoriesForLocalProfilePictures() {
         try {
+            // TODO. We can also initialize default picture which will be copied from /resources folder.
             Files.createDirectories(Paths.get(profilePictureUploadPath));
         } catch (IOException e) {
             throw new RuntimeException("Could not create upload folder! Error: " + e);

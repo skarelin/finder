@@ -28,6 +28,7 @@ public interface UploadUserProfilePictureUseCase {
     class UploadUserProfilePictureCommand {
         @NotNull MultipartFile file;
         @NotNull Long userId;
+        @NotNull String userUuid;
     }
 
     enum ErrorCode {

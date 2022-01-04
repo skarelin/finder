@@ -6,6 +6,7 @@ import com.business.finder.user.application.port.UploadUserProfilePictureUseCase
 import com.business.finder.user.application.validator.UploadUserProfilePictureValidator;
 import com.business.finder.user.db.BfProfilePictureRepository;
 import com.business.finder.user.domain.BfProfilePicture;
+import com.business.finder.user.domain.type.ProfilePictureExtension;
 import com.business.finder.user.domain.type.ProfilePictureStatus;
 import com.business.finder.user.domain.type.ProfilePictureStorage;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +34,8 @@ public class UploadUserProfilePictureService implements UploadUserProfilePicture
     @Override
     @Transactional
     public UploadUserProfilePictureResponse upload(UploadUserProfilePictureCommand command) {
-        final String fileName = command.getUserId().toString();
-        final String fileExtension = getFileExtensionFrom(command.getFile());
+        final String fileName = command.getUserUuid();
+        final ProfilePictureExtension fileExtension = getFileExtensionFrom(command.getFile());
 
         List<ErrorCode> errors = validator.validate(fileExtension);
 
@@ -42,20 +43,29 @@ public class UploadUserProfilePictureService implements UploadUserProfilePicture
             return UploadUserProfilePictureResponse.errors(errors);
         }
 
-        BfProfilePicture entity = new BfProfilePicture(fileName, command.getUserId(), ProfilePictureStorage.LOCAL);
-        BfProfilePicture savedEntity = profilePictureRepository.save(entity);
+        BfProfilePicture entity = getOrCreateBfProfilePicture(command.getUserId());
+        entity.setFileName(fileName);
+        entity.setPictureStorage(ProfilePictureStorage.LOCAL);
+        entity.setExtension(fileExtension);
 
         LocalPictureUploadedResponse response = localPictureUploaderUseCase.uploadAndReplace(command.getFile(), fileName, userProfilePictureFolder);
 
         if (response.isSuccess()) {
-            savedEntity.setStatus(ProfilePictureStatus.PICTURE_UPLOADED);
+            entity.setStatus(ProfilePictureStatus.PICTURE_UPLOADED);
         }
 
         log.info("Added profile picture for user: " + command.getUserId());
         return UploadUserProfilePictureResponse.OK;
     }
 
-    private String getFileExtensionFrom(MultipartFile file) {
-        return StringUtils.getFilenameExtension(file.getOriginalFilename());
+    private ProfilePictureExtension getFileExtensionFrom(MultipartFile file) {
+        String fileExtension = StringUtils.getFilenameExtension(file.getOriginalFilename());
+        return ProfilePictureExtension.valueOf(fileExtension.toUpperCase());
+    }
+
+    private BfProfilePicture getOrCreateBfProfilePicture(Long userId) {
+        return profilePictureRepository
+                .findByUserId(userId)
+                .orElseGet(() -> profilePictureRepository.save(new BfProfilePicture(userId)));
     }
 }
