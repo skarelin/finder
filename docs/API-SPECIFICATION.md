@@ -38,6 +38,8 @@ POST: /investment-proposal
 
 GET: /investment-proposal/{investment-proposal-uuid} -> show proposal by UUID;
 
+GET: /investment-proposal/all?country="Poland"&language="En" -> show all investment proposals by filters;
+
 PUT: /investment-proposal/{investment-proposal-uuid} -> update given investment-proposal-uuid
 
 DELETE: /investment-proposal/{investment-proposal-uuid} -> delete investment by UUID;
@@ -48,11 +50,12 @@ PUT: /user/profile-picture/ -> update user profile picture. (contains also add o
 DELETE: /user/profile-picture/ -> remove user profile picture.
 
 InvestmentProposalEntity(WIP):
-- subject;
-- description;
-- minimumInvestmentValue;
-- country;
-- city;
-- industry;
-- teamLanguage;
+- subject(must have);
+- description(optional);
+- minimumInvestmentValue(optional);
+- country(must have);
+- city(optional);
+- industry(must have);
+- teamLanguage(optional);
 - projectBudget(optional);
+- expectedPaybackPeriod(optional);

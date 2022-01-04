@@ -1,5 +1,6 @@
 package com.business.finder.user.domain;
 
+import com.business.finder.investment.domain.InvestmentProposal;
 import com.business.finder.jpa.BaseEntity;
 import com.business.finder.partnership.domain.PartnershipProposal;
 import com.business.finder.user.domain.type.BfUserStatus;
@@ -57,6 +58,10 @@ public class BfUser extends BaseEntity {
     @OneToMany // TODO. Think about cascadeType in future. Not sure about archive process for partnership proposals.
     @JoinColumn(name = "bf_user_Id")
     private Set<PartnershipProposal> partnershipProposals = new HashSet<>();
+
+    @OneToMany
+    @JoinColumn(name = "bf_user_Id")
+    private Set<InvestmentProposal> investmentProposals = new HashSet<>();
 
     public BfUser(String email, String password, BfUserType bfUserType) {
         this.email = email;
