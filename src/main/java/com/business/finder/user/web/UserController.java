@@ -70,6 +70,11 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/profile-picture")
+    public void removeUserProfilePicture() {
+        // TODO.
+    }
+
     @Data
     static class RestUpdateUserCommand {
         @Size(max = 3000)
