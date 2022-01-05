@@ -3,7 +3,7 @@ package com.business.finder.user.web;
 import com.business.finder.user.application.port.CreateUserUseCase;
 import com.business.finder.user.application.port.CreateUserUseCase.CreateUserCommand;
 import com.business.finder.user.application.port.CreateUserUseCase.CreateUserResponse;
-import com.business.finder.user.domain.BfUserType;
+import com.business.finder.user.domain.type.BfUserType;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

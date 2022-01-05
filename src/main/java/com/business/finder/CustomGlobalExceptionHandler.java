@@ -4,12 +4,14 @@ import com.business.finder.investment.application.exceptions.InvestmentProposalN
 import com.business.finder.investment.application.exceptions.NoAccessToInvestmentProposalException;
 import com.business.finder.partnership.application.exception.NoAccessToPartnershipProposalException;
 import com.business.finder.partnership.application.exception.PartnershipProposalIsNotFoundException;
+import com.business.finder.upload.application.exception.UploadPictureException;
 import com.business.finder.user.application.exception.BfUserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -18,6 +20,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
+// TODO. Add trace-id here I think. For every RuntimeException. Easier to analyze later.
+    // TODO. Add also handle for Exception. Maybe?
 class CustomGlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -31,8 +35,14 @@ class CustomGlobalExceptionHandler {
         return handleError(HttpStatus.BAD_REQUEST, errors);
     }
 
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<Object> handleMaxSizeException(MaxUploadSizeExceededException exc) {
+        return handleError(HttpStatus.EXPECTATION_FAILED, List.of("Unable to upload. File is too large! Internal info: " + exc));
+    }
+
     @ExceptionHandler({IllegalArgumentException.class,
-            BfUserException.class})
+            BfUserException.class,
+            UploadPictureException.class})
     public ResponseEntity<Object> handleBadRequest(RuntimeException ex) {
         return handleError(HttpStatus.BAD_REQUEST, List.of(ex.getMessage()));
     }

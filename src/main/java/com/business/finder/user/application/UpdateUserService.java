@@ -4,6 +4,7 @@ import com.business.finder.user.application.port.UpdateUserUseCase;
 import com.business.finder.user.db.BfUserRepository;
 import com.business.finder.user.domain.BfUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UpdateUserService implements UpdateUserUseCase {
 
     private final BfUserRepository repository;
@@ -20,6 +22,7 @@ public class UpdateUserService implements UpdateUserUseCase {
     public UpdateUserResponse update(UpdateUserCommand command) {
         return repository.findByEmailIgnoreCase(command.getUserEmail())
                 .map(user -> {
+                    log.info("Updating user: " + command.getUserEmail() + " by command: " + command);
                     updateFields(command, user);
                     return UpdateUserResponse.OK;
                 })

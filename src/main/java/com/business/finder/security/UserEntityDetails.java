@@ -55,4 +55,8 @@ public class UserEntityDetails implements UserDetails {
     public Long getCurrentUserId() {
         return entity.getId();
     }
+
+    public String getCurrentUserUuid() {
+        return entity.getUuid();
+    }
 }

@@ -1,6 +1,6 @@
 package com.business.finder.user.application.port;
 
-import com.business.finder.user.domain.BfUserType;
+import com.business.finder.user.domain.type.BfUserType;
 import lombok.Value;
 
 import java.util.Arrays;
@@ -27,7 +27,7 @@ public interface CreateUserUseCase {
         }
 
         public static CreateUserResponse errors(Error... errors) {
-            return new CreateUserResponse(true, Arrays.asList(errors));
+            return new CreateUserResponse(false, Arrays.asList(errors));
         }
 
         boolean success;

@@ -1,5 +1,6 @@
 package com.business.finder.user.application.port;
 
+import lombok.ToString;
 import lombok.Value;
 
 import javax.validation.constraints.NotBlank;
@@ -14,10 +15,11 @@ public interface UpdateUserUseCase {
         public static UpdateUserResponse OK = new UpdateUserResponse(true, Collections.emptyList());
 
         boolean success;
-        List<DeleteUserUseCase.Error> errors;
+        List<DeleteUserUseCase.Error> errors;// TODO(skarelin): DeleteUserUseCase.Error?? Fix it.
     }
 
     @Value
+    @ToString
     class UpdateUserCommand {
         String userDescription;
         @NotBlank String userEmail;

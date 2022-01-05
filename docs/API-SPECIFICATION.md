@@ -44,6 +44,11 @@ PUT: /investment-proposal/{investment-proposal-uuid} -> update given investment-
 
 DELETE: /investment-proposal/{investment-proposal-uuid} -> delete investment by UUID;
 
+==============================[User-Profile-Picture-Controller]
+PUT: /user/profile-picture/ -> update user profile picture. (contains also add operation);
+
+DELETE: /user/profile-picture/ -> remove user profile picture.
+
 InvestmentProposalEntity(WIP):
 - subject(must have);
 - description(optional);
