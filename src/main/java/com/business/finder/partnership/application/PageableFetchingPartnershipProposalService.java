@@ -19,4 +19,9 @@ class PageableFetchingPartnershipProposalService implements PageableFetchingPart
         return repository.findAll(pageable).map(mapper::toPartnershipProposalResponse);
     }
 
+    @Override
+    public Page<PartnershipProposalResponse> fetchByProposalsState(FetchByProposalStateCommand command) {
+        return repository.findByStateEquals(command.getProposalState(), command.getPageable()).map(mapper::toPartnershipProposalResponse);
+    }
+
 }

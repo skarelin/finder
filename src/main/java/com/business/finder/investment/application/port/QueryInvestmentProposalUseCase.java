@@ -5,6 +5,7 @@ import com.business.finder.investment.domain.InvestmentProposal;
 import com.business.finder.metadata.Country;
 import com.business.finder.metadata.Industry;
 import com.business.finder.metadata.Language;
+import com.business.finder.metadata.ProposalState;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Value;
@@ -27,7 +28,7 @@ public interface QueryInvestmentProposalUseCase {
 
     InvestmentProposalResponse remove(RemoveInvestmentProposalCommand command);
 
-    Page<InvestmentProposalDataResponse> fetchProposalsPageable(Pageable pageable, Long userId);
+
 
 
 
@@ -54,7 +55,8 @@ public interface QueryInvestmentProposalUseCase {
                     this.teamLanguage,
                     this.projectBudget,
                     this.expectedPaybackPeriod,
-                    this.userId);
+                    this.userId,
+                    ProposalState.NEW);
         }
     }
 

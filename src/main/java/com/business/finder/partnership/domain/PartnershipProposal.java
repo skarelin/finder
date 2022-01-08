@@ -3,6 +3,7 @@ package com.business.finder.partnership.domain;
 import com.business.finder.jpa.BaseEntity;
 import com.business.finder.metadata.Country;
 import com.business.finder.metadata.Industry;
+import com.business.finder.metadata.ProposalState;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -47,6 +48,9 @@ public class PartnershipProposal extends BaseEntity {
 
     @Column(name = "bf_user_Id")
     private Long bfUserId;
+
+    @Enumerated(EnumType.STRING)
+    private ProposalState state;
 
     public PartnershipProposal(String subject,
                                Industry industry,

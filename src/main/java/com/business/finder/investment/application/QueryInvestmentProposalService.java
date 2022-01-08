@@ -7,6 +7,7 @@ import com.business.finder.investment.application.mapper.InvestmentProposalMappe
 import com.business.finder.investment.application.port.QueryInvestmentProposalUseCase;
 import com.business.finder.investment.db.InvestmentProposalRepository;
 import com.business.finder.investment.domain.InvestmentProposal;
+import com.business.finder.metadata.ProposalState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -74,13 +75,6 @@ public class QueryInvestmentProposalService implements QueryInvestmentProposalUs
         return InvestmentProposalResponse.OK;
     }
 
-    @Override
-    public Page<InvestmentProposalDataResponse> fetchProposalsPageable(Pageable pageable, Long userId) {
-        return repository
-                .findAll(pageable)
-                .map(investmentProposal -> createResponse(investmentProposal, userId));
-    }
-
     private void updateData(InvestmentProposal investmentProposal, UpdateInvestmentProposalCommand command) {
         investmentProposal.setProjectSubject(command.getProjectSubject());
         investmentProposal.setProjectDescription(command.getProjectDescription());
@@ -91,6 +85,7 @@ public class QueryInvestmentProposalService implements QueryInvestmentProposalUs
         investmentProposal.setMinimumInvestmentValue(command.getMinimumInvestmentValue());
         investmentProposal.setProjectBudget(command.getProjectBudget());
         investmentProposal.setExpectedPaybackPeriod(command.getExpectedPaybackPeriod());
+        investmentProposal.setState(ProposalState.NEW);
     }
 
     private InvestmentProposalDataResponse createResponse(InvestmentProposal investmentProposal, Long userId) {

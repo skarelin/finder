@@ -5,16 +5,16 @@ import com.business.finder.investment.application.exceptions.NoAccessToInvestmen
 import com.business.finder.partnership.application.exception.NoAccessToPartnershipProposalException;
 import com.business.finder.partnership.application.exception.PartnershipProposalIsNotFoundException;
 import com.business.finder.user.application.exception.BfUserException;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.yaml.snakeyaml.util.ArrayUtils;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.LongPredicate;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -32,7 +32,7 @@ class CustomGlobalExceptionHandler {
     }
 
     @ExceptionHandler({IllegalArgumentException.class,
-            BfUserException.class})
+            BfUserException.class, ConversionFailedException.class})
     public ResponseEntity<Object> handleBadRequest(RuntimeException ex) {
         return handleError(HttpStatus.BAD_REQUEST, List.of(ex.getMessage()));
     }

@@ -1,6 +1,8 @@
 package com.business.finder.investment.web;
 
 import com.business.finder.investment.application.dto.InvestmentProposalDataResponse;
+import com.business.finder.investment.application.port.PageableFetchingInvestmentProposalUseCase;
+import com.business.finder.investment.application.port.PageableFetchingInvestmentProposalUseCase.FetchByProposalStateCommand;
 import com.business.finder.investment.application.port.QueryInvestmentProposalUseCase;
 import com.business.finder.investment.application.port.QueryInvestmentProposalUseCase.CreateInvestmentProposalCommand;
 import com.business.finder.investment.application.port.QueryInvestmentProposalUseCase.InvestmentProposalResponse;
@@ -9,6 +11,7 @@ import com.business.finder.investment.application.port.QueryInvestmentProposalUs
 import com.business.finder.metadata.Country;
 import com.business.finder.metadata.Industry;
 import com.business.finder.metadata.Language;
+import com.business.finder.metadata.ProposalState;
 import com.business.finder.security.UserEntityDetails;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +37,7 @@ import javax.validation.constraints.Size;
 public class InvestmentProposalController {
 
     private final QueryInvestmentProposalUseCase queryInvestmentProposalUseCase;
+    private final PageableFetchingInvestmentProposalUseCase pageableFetchingInvestmentProposalUseCase;
 
     @PostMapping
     public ResponseEntity<InvestmentProposalResponse> createInvestmentProposal(@AuthenticationPrincipal UserEntityDetails userEntityDetails,  @Valid @RequestBody RestCreateInvestmentProposal data) {
@@ -63,7 +67,12 @@ public class InvestmentProposalController {
 
     @GetMapping("/all")
     public Page<InvestmentProposalDataResponse> getPageableInvestmentProposals(Pageable pageable, @AuthenticationPrincipal UserEntityDetails userEntityDetails){
-        return queryInvestmentProposalUseCase.fetchProposalsPageable(pageable, userEntityDetails.getCurrentUserId());
+        return pageableFetchingInvestmentProposalUseCase.fetch(pageable, userEntityDetails.getCurrentUserId());
+    }
+
+    @GetMapping("/all/{proposalState}")
+    public Page<InvestmentProposalDataResponse> getPageableInvestmentProposalsByState(@PathVariable ProposalState proposalState,  Pageable pageable, @AuthenticationPrincipal UserEntityDetails userEntityDetails){
+        return pageableFetchingInvestmentProposalUseCase.fetchByProposalsState(new FetchByProposalStateCommand(pageable,  userEntityDetails.getCurrentUserId(), proposalState));
     }
 
     @DeleteMapping({"/{investmentProposalUuid}"})

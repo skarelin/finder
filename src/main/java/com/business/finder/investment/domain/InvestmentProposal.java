@@ -4,6 +4,7 @@ import com.business.finder.jpa.BaseEntity;
 import com.business.finder.metadata.Country;
 import com.business.finder.metadata.Industry;
 import com.business.finder.metadata.Language;
+import com.business.finder.metadata.ProposalState;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -52,6 +53,9 @@ public class InvestmentProposal extends BaseEntity {
     @Column(name = "bf_user_Id")
     private Long userId;
 
+    @Enumerated(EnumType.STRING)
+    private ProposalState state;
+
 
     public InvestmentProposal(String projectSubject,
                               String projectDescription,
@@ -61,7 +65,8 @@ public class InvestmentProposal extends BaseEntity {
                               Language teamLanguage,
                               int projectBudget,
                               int expectedPaybackPeriod,
-                              Long userId) {
+                              Long userId,
+                              ProposalState state) {
         this.projectSubject = projectSubject;
         this.projectDescription = projectDescription;
         this.country = country;
@@ -72,5 +77,6 @@ public class InvestmentProposal extends BaseEntity {
         this.projectBudget = projectBudget;
         this.expectedPaybackPeriod = expectedPaybackPeriod;
         this.userId = userId;
+        this.state = state;
     }
 }

@@ -1,9 +1,13 @@
 package com.business.finder.partnership.web;
 
+import com.business.finder.investment.application.dto.InvestmentProposalDataResponse;
+import com.business.finder.investment.application.port.PageableFetchingInvestmentProposalUseCase;
 import com.business.finder.metadata.Country;
 import com.business.finder.metadata.Industry;
+import com.business.finder.metadata.ProposalState;
 import com.business.finder.partnership.application.PartnershipProposalResponse;
 import com.business.finder.partnership.application.port.PageableFetchingPartnershipProposalUseCase;
+import com.business.finder.partnership.application.port.PageableFetchingPartnershipProposalUseCase.FetchByProposalStateCommand;
 import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase;
 import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.CreatePartnershipProposalCommand;
 import com.business.finder.partnership.application.port.QueryPartnershipProposalUseCase.RemovePartnershipProposalCommand;
@@ -56,6 +60,11 @@ public class PartnershipProposalController {
     @GetMapping("/all")
     public Page<PartnershipProposalResponse> getAllPartnershipProposal(Pageable pageable) {
         return pageableFetchingPartnershipProposalUseCase.fetch(pageable);
+    }
+
+    @GetMapping("/all/{proposalState}")
+    public Page<PartnershipProposalResponse> getPageableInvestmentProposalsByState(@PathVariable ProposalState proposalState, Pageable pageable, @AuthenticationPrincipal UserEntityDetails userEntityDetails){
+        return pageableFetchingPartnershipProposalUseCase.fetchByProposalsState(new FetchByProposalStateCommand(pageable,  userEntityDetails.getCurrentUserId(), proposalState));
     }
 
     @PutMapping("/{uuid}")
